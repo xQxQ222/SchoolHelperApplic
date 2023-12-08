@@ -1,4 +1,4 @@
-﻿using MySql.Data.MySqlClient;
+﻿using MySqlConnector;
 using System.Data;
 using System.Net.Mail;
 using System.Net;
@@ -16,11 +16,13 @@ namespace WinFormsApp1
 
         private void Form2_Load(object sender, EventArgs e)
         {
-            List<string> list = new List<string>();
-            list.Add("");
-            list.Add("Администратор");
-            list.Add("Учитель");
-            list.Add("Ученик");
+            List<string> list = new List<string>
+            {
+                "",
+                "Администратор",
+                "Учитель",
+                "Ученик"
+            };
             list.Sort();
             status.DataSource = list;
             codeField.Enabled = false;
@@ -68,80 +70,96 @@ namespace WinFormsApp1
 
         private void LoginButton_Click(object sender, EventArgs e)
         {
-            if (checkUser() || checkEmail())
+            //if (checkUser() || checkEmail())
+            if (ReadFromDB.CheckIfNameOfUserInBD(LoginField.Text) || ReadFromDB.CheckIfEmailInBD(emailBox.Text))
             {
                 MessageBox.Show("Пользователь с таким логином или E-mail уже существует");
                 return;
             }
-            DB db = new DB();
-            MySqlCommand command = new MySqlCommand("INSERT INTO `users` (`login`, `password`, `name`, `last name`,`otchestvo`, `birthdate`, `status`,`email`) VALUES (@log,@pass,@name,@surename,@otch,@birthDate,@status,@email);", db.getConnection());
+            //Тута лежит закоментированный предыдущий код
+            #region
+            //DB db = new DB();
+            //MySqlCommand command = new MySqlCommand("INSERT INTO `users` (`login`, `password`, `name`, `last name`,`otchestvo`, `birthdate`, `status`,`email`) VALUES (@log,@pass,@name,@surename,@otch,@birthDate,@status,@email);", db.getConnection());
 
-            command.Parameters.Add("@log", MySqlDbType.VarChar).Value = LoginField.Text;
-            command.Parameters.Add("@pass", MySqlDbType.VarChar).Value = PasswordField.Text;
-            command.Parameters.Add("@name", MySqlDbType.Text).Value = name.Text;
-            command.Parameters.Add("@surename", MySqlDbType.Text).Value = surname.Text;
-            command.Parameters.Add("@otch", MySqlDbType.VarChar).Value = Otchestvo.Text;
-            command.Parameters.Add("@birthDate", MySqlDbType.Date).Value = birthDate.Value;
-            command.Parameters.Add("@status", MySqlDbType.Text).Value = status.Text;
-            command.Parameters.Add("@email", MySqlDbType.VarChar).Value = emailBox.Text;
+            //command.Parameters.Add("@log", MySqlDbType.VarChar).Value = LoginField.Text;
+            //command.Parameters.Add("@pass", MySqlDbType.VarChar).Value = PasswordField.Text;
+            //command.Parameters.Add("@name", MySqlDbType.Text).Value = name.Text;
+            //command.Parameters.Add("@surename", MySqlDbType.Text).Value = surname.Text;
+            //command.Parameters.Add("@otch", MySqlDbType.VarChar).Value = Otchestvo.Text;
+            //command.Parameters.Add("@birthDate", MySqlDbType.Date).Value = birthDate.Value;
+            //command.Parameters.Add("@status", MySqlDbType.Text).Value = status.Text;
+            //command.Parameters.Add("@email", MySqlDbType.VarChar).Value = emailBox.Text;
 
-            db.openConnection();
-            if (command.ExecuteNonQuery() == 1)
+            //db.openConnection();
+            //if (command.ExecuteNonQuery() == 1)
+            //    MessageBox.Show("Пользователь успешно зарегистрирован");
+            //else
+            //{
+            //    MessageBox.Show("Ошибка в регистрации. Проверьте заполнены ли все поля");
+            //    return;
+            //}
+            //db.closeConnection();
+            #endregion 
+
+            var userSuccessfullyregistered = WriteToDB.RegisterANewUser(LoginField.Text, PasswordField.Text, name.Text, 
+                surname.Text, Otchestvo.Text, birthDate.Value, status.Text, emailBox.Text); // логически странно
+
+            if (userSuccessfullyregistered)
                 MessageBox.Show("Пользователь успешно зарегистрирован");
             else
             {
                 MessageBox.Show("Ошибка в регистрации. Проверьте заполнены ли все поля");
                 return;
             }
-            db.closeConnection();
+
             Thread.Sleep(1000);
             var form = new StartScreen();
             form.Show();
             this.Close();
         }
 
-        public bool checkUser()
-        {
-            DB db = new DB();
-            DataTable dt = new DataTable();
+        //public bool checkUser()
+        //{
+        //    DB db = new DB();
+        //    DataTable dt = new DataTable();
 
-            MySqlDataAdapter adapter = new MySqlDataAdapter();
+        //    MySqlDataAdapter adapter = new MySqlDataAdapter();
 
-            MySqlCommand command = new MySqlCommand("SELECT * FROM `users` WHERE `login`=@uL", db.getConnection());
-            command.Parameters.Add("@uL", MySqlDbType.VarChar).Value = LoginField.Text;
+        //    MySqlCommand command = new MySqlCommand("SELECT * FROM `users` WHERE `login`=@uL", db.getConnection());
+        //    command.Parameters.Add("@uL", MySqlDbType.VarChar).Value = LoginField.Text;
 
-            adapter.SelectCommand = command;
-            adapter.Fill(dt);
+        //    adapter.SelectCommand = command;
+        //    adapter.Fill(dt);
 
-            if (dt.Rows.Count > 0)
-            {
-                MessageBox.Show("Пользователь с таким именем уже существует");
-                return true;
-            }
-            else
-                return false;
-        }
-        public bool checkEmail()
-        {
-            DB db = new DB();
-            DataTable dt = new DataTable();
+        //    if (dt.Rows.Count > 0)
+        //    {
+        //        MessageBox.Show("Пользователь с таким именем уже существует");
+        //        return true;
+        //    }
+        //    else
+        //        return false;
+        //}
+        //public bool checkEmail() 
+        //{
+        //    DB db = new DB();
+        //    DataTable dt = new DataTable();
 
-            MySqlDataAdapter adapter = new MySqlDataAdapter();
+        //    MySqlDataAdapter adapter = new MySqlDataAdapter();
 
-            MySqlCommand command = new MySqlCommand("SELECT * FROM `users` WHERE `email`=@uE", db.getConnection());
-            command.Parameters.Add("@uE", MySqlDbType.VarChar).Value = emailBox.Text;
+        //    MySqlCommand command = new MySqlCommand("SELECT * FROM `users` WHERE `email`=@uE", db.getConnection());
+        //    command.Parameters.Add("@uE", MySqlDbType.VarChar).Value = emailBox.Text;
 
-            adapter.SelectCommand = command;
-            adapter.Fill(dt);
+        //    adapter.SelectCommand = command;
+        //    adapter.Fill(dt);
 
-            if (dt.Rows.Count > 0)
-            {
-                MessageBox.Show("Пользователь с такой почтой уже существует");
-                return true;
-            }
-            else
-                return false;
-        }
+        //    if (dt.Rows.Count > 0)
+        //    {
+        //        MessageBox.Show("Пользователь с такой почтой уже существует");
+        //        return true;
+        //    }
+        //    else
+        //        return false;
+        //}
 
         private void status_SelectedIndexChanged(object sender, EventArgs e)
         {

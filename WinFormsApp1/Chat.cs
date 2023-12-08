@@ -1,4 +1,4 @@
-﻿using MySql.Data.MySqlClient;
+﻿using MySqlConnector;
 using System.Data;
 
 namespace WinFormsApp1
@@ -29,7 +29,7 @@ namespace WinFormsApp1
 
         private void Chat_Load(object sender, EventArgs e)
         {
-            var recip = GetRecipients();
+            var recip = ReadFromDB.GetRecipients();
             comboBox1.DataSource = recip.Item1;
         }
 
@@ -45,7 +45,7 @@ namespace WinFormsApp1
 
         private void Send_Click(object sender, EventArgs e)
         {
-            var recip = GetRecipients();
+            var recip = ReadFromDB.GetRecipients();
             DB dB = new DB();
 
             MySqlCommand cmd = new MySqlCommand("INSERT INTO `messages` (`sender`, `recipient`, `message`, `messageDate`) VALUES (@sender, @recipient, @message, @messageDate)", dB.getConnection());
@@ -60,46 +60,7 @@ namespace WinFormsApp1
             dB.closeConnection();
         }
 
-        public Tuple<List<string>, Dictionary<string, string>> GetRecipients()
-        {
-            var list = new List<string>();
-            var dic = new Dictionary<string, string>();
-            DB db = new DB();
-            DataTable dt = new DataTable();
-            MySqlDataAdapter adapter = new MySqlDataAdapter();
-            MySqlCommand command = null;
-            if (currentUser._status == "Ученик")
-                command = new MySqlCommand("SELECT * FROM `users` WHERE `status` LIKE 'Учитель'", db.getConnection());
-            else if (currentUser._status == "Учитель")
-                command = new MySqlCommand("SELECT * FROM `users` WHERE 'status' LIKE 'Учитель' OR 'Ученик'", db.getConnection());
-            else
-            {
-                command = new MySqlCommand("SELECT * FROM `users`", db.getConnection());
-            }
-            adapter.SelectCommand = command;
-            adapter.Fill(dt);
-            db.openConnection();
-            list.Add("");
-            if (dt.Rows.Count > 0)
-            {
-                foreach (DataRow row in dt.Rows)
-                {
-                    var read = command.ExecuteReader();
-                    read.Read();
-                    var login = read.GetString(1);
-                    var name = read.GetString(3);
-                    var surname = read.GetString(4);
-                    var patronymic = read.GetString(5);
-                    var fullName = $"{surname} {name.Substring(0, 1)}. {patronymic.Substring(0, 1)}.";
-                    string teacher = fullName;
-                    dic[fullName] = login;
-                    list.Add(teacher);
-                }
-            }
-            db.closeConnection();
-            var tuple = new Tuple<List<string>, Dictionary<string, string>>(list, dic);
-            return tuple;
-        }
+
 
         private void button1_Click(object sender, EventArgs e)
         {

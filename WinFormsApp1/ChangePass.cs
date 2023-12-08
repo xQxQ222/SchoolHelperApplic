@@ -1,4 +1,5 @@
-﻿using MySql.Data.MySqlClient;
+﻿//using MySql.Data.MySqlClient;
+using MySqlConnector;
 using System.Data;
 using System.Net;
 using System.Net.Mail;
@@ -14,18 +15,7 @@ namespace WinFormsApp1
 
         private void button1_Click(object sender, EventArgs e)
         {
-            DB db = new DB();
-            DataTable dt = new DataTable();
-
-            MySqlDataAdapter adapter = new MySqlDataAdapter();
-
-            MySqlCommand command = new MySqlCommand("SELECT * FROM `users` WHERE `email`=@uE", db.getConnection());
-            command.Parameters.Add("@uE", MySqlDbType.VarChar).Value = emailBox.Text;
-
-            adapter.SelectCommand = command;
-            adapter.Fill(dt);
-
-            if (dt.Rows.Count > 0)
+            if (ReadFromDB.CheckIfEmailInBD(emailBox.Text))
             {
                 code = SendMessage(emailBox.Text);
                 MessageBox.Show("Код отправлен на почту");
