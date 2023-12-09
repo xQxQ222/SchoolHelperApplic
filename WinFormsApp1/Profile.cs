@@ -29,12 +29,12 @@ namespace WinFormsApp1
 
         private void Profile_Load(object sender, EventArgs e)
         {
-            name.Text = currentUser._name;
-            surename.Text = currentUser._surename;
-            patronymic.Text = currentUser._patronymic;
-            status.Text = currentUser._status;
-            birthDate.Text = currentUser._Date.ToShortDateString();
-            email.Text = currentUser._email;
+            name.Text = User.Current._name;
+            surename.Text = User.Current._surename;
+            patronymic.Text = User.Current._patronymic;
+            status.Text = User.Current._status;
+            birthDate.Text = User.Current._Date.ToShortDateString();
+            email.Text = User.Current._email;
         }
 
         private void button1_Click(object sender, EventArgs e)

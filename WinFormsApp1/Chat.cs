@@ -46,18 +46,11 @@ namespace WinFormsApp1
         private void Send_Click(object sender, EventArgs e)
         {
             var recip = ReadFromDB.GetRecipients();
-            DB dB = new DB();
 
-            MySqlCommand cmd = new MySqlCommand("INSERT INTO `messages` (`sender`, `recipient`, `message`, `messageDate`) VALUES (@sender, @recipient, @message, @messageDate)", dB.getConnection());
-            cmd.Parameters.Add("@sender", MySqlDbType.VarChar).Value = currentUser._login;
-            cmd.Parameters.Add("@recipient", MySqlDbType.VarChar).Value = recip.Item2[comboBox1.Text];
-            cmd.Parameters.Add("@message", MySqlDbType.Text).Value = richTextBox1.Text;
-            cmd.Parameters.Add("@messageDate", MySqlDbType.Date).Value = DateTime.Now;
-            dB.openConnection();
+            WriteToDB.AddNewMessage(recip, comboBox1.Text, richTextBox1.Text);
+
             MessageBox.Show("Сообщение успешно отправлено");
             richTextBox1.Clear();
-            cmd.ExecuteNonQuery();
-            dB.closeConnection();
         }
 
 

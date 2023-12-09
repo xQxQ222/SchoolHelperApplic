@@ -101,10 +101,12 @@ namespace WinFormsApp1
             //db.closeConnection();
             #endregion 
 
-            var userSuccessfullyregistered = WriteToDB.RegisterANewUser(LoginField.Text, PasswordField.Text, name.Text, 
-                surname.Text, Otchestvo.Text, birthDate.Value, status.Text, emailBox.Text); // логически странно
+            User newUser = new User() {_login = LoginField.Text, _password = PasswordField.Text,_name = name.Text, _surename = surname.Text,
+                _patronymic = Otchestvo.Text, _Date = birthDate.Value, _status = status.Text, _email = emailBox.Text};
+                    
+            var userSuccessfullyRegistered = WriteToDB.RegisterANewUser(newUser); // логически странно
 
-            if (userSuccessfullyregistered)
+            if (userSuccessfullyRegistered)
                 MessageBox.Show("Пользователь успешно зарегистрирован");
             else
             {

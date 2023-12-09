@@ -1,15 +1,15 @@
 ﻿namespace WinFormsApp1
 {
-    class currentUser
+    class currentUser // не используется
     {
-        public static int _id;
-        public static string _login;
-        public static string _password;
-        public static string _name;
-        public static string _surename;
-        public static string _patronymic;
-        public static DateTime _Date;
-        public static string _email;
-        public static string _status;
+        public int _id;
+        public string _login;
+        public string _password;
+        public string _name;
+        public string _surename;
+        public string _patronymic;
+        public DateTime _Date;
+        public string _email;
+        public string _status;
     }
 }

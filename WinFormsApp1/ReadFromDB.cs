@@ -5,10 +5,9 @@ namespace WinFormsApp1
 {
     internal class ReadFromDB
     {
-        public static DB db = new DB(); // не уверена, что лучше тут инициализировать из-за статика
-
         public static bool ReadCurrentUser(string login, string password)
         {
+            DB db = new DB();
             bool userIsLoggedInSuccessfully;
 
             DataTable dt = new DataTable();
@@ -33,15 +32,15 @@ namespace WinFormsApp1
                 var month = int.Parse(withoutTime.Split('.')[1]);
                 var year = int.Parse(withoutTime.Split(".")[2]);
                 var date = new DateTime(year, month, day);
-                currentUser._id = int.Parse(read.GetString(0));
-                currentUser._login = read.GetString(1);
-                currentUser._password = read.GetString(2);
-                currentUser._name = read.GetString(3);
-                currentUser._surename = read.GetString(4);
-                currentUser._patronymic = read.GetString(5);
-                currentUser._Date = date;
-                currentUser._status = read.GetString(7);
-                currentUser._email = read.GetString(8);
+                User.Current._id = int.Parse(read.GetString(0));
+                User.Current._login = read.GetString(1);
+                User.Current._password = read.GetString(2);
+                User.Current._name = read.GetString(3);
+                User.Current._surename = read.GetString(4);
+                User.Current._patronymic = read.GetString(5);
+                User.Current._Date = date;
+                User.Current._status = read.GetString(7);
+                User.Current._email = read.GetString(8);
             }
             else
                 userIsLoggedInSuccessfully = false;
@@ -52,6 +51,7 @@ namespace WinFormsApp1
 
         public static List<string> GetAdministrators()
         {
+            DB db = new DB();
             List<string> list = new List<string>();
             DataTable dt = new DataTable();
             MySqlDataAdapter adapter = new MySqlDataAdapter();
@@ -82,6 +82,7 @@ namespace WinFormsApp1
 
         public static bool CheckIfEmailInBD(string email) // тут точно строковый тип???
         {
+            DB db = new DB();
             DataTable dt = new DataTable();
 
             MySqlDataAdapter adapter = new MySqlDataAdapter();
@@ -119,9 +120,9 @@ namespace WinFormsApp1
             DataTable dt = new DataTable();
             MySqlDataAdapter adapter = new MySqlDataAdapter();
             MySqlCommand command = null;
-            if (currentUser._status == "Ученик")
+            if (User.Current._status == "Ученик")
                 command = new MySqlCommand("SELECT * FROM `users` WHERE `status` LIKE 'Учитель'", db.getConnection());
-            else if (currentUser._status == "Учитель")
+            else if (User.Current._status == "Учитель")
                 command = new MySqlCommand("SELECT * FROM `users` WHERE 'status' LIKE 'Учитель' OR 'Ученик'", db.getConnection());
             else
             {

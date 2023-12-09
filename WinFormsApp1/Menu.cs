@@ -15,7 +15,7 @@ namespace WinFormsApp1
         private async void Menu_Load(object sender, EventArgs e)
         {
             flowLayoutPanel1.Visible = false;
-            if (currentUser._status == "Администратор")
+            if (User.Current._status == "Администратор")
             {
                 button1.Location = new System.Drawing.Point(74, 146);
                 button2.Location = new System.Drawing.Point(74, 398);

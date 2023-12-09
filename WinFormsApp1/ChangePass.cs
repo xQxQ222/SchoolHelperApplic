@@ -59,18 +59,10 @@ namespace WinFormsApp1
 
         private void button2_Click(object sender, EventArgs e)
         {
-
             if (int.Parse(CodeBox.Text) == code && code != 0)
             {
-                DB db = new DB();
-                DataTable dt = new DataTable();
-                MySqlCommand command = new MySqlCommand("UPDATE `users` SET `password` = @uP WHERE `users`.`email` LIKE @email", db.getConnection());
-                command.Parameters.Add("@email", MySqlDbType.VarChar).Value = emailBox.Text;
-                command.Parameters.Add("@uP", MySqlDbType.VarChar).Value = newPass.Text;
-                db.openConnection();
-                MessageBox.Show("Пароль успешно изменен");
-                command.ExecuteNonQuery();
-                db.closeConnection();
+                WriteToDB.ChangePass(emailBox.Text, newPass.Text);
+
                 Thread.Sleep(500);
                 var form = new LoginForm();
                 form.Show();
