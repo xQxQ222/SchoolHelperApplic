@@ -69,9 +69,7 @@ namespace WinFormsApp1
                 this.Close();
             }
             else
-            {
                 MessageBox.Show("Неверный код подтверждения");
-            }
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -83,9 +81,9 @@ namespace WinFormsApp1
 
         private void ShowPassword_CheckedChanged(object sender, EventArgs e)
         {
-            if (ShowPassword.Checked == false)
+            if (!ShowPassword.Checked)
                 newPass.UseSystemPasswordChar = true;
-            if (ShowPassword.Checked == true)
+            if (ShowPassword.Checked)
                 newPass.UseSystemPasswordChar = false;
         }
 

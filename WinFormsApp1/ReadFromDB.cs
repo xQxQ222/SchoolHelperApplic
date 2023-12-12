@@ -3,16 +3,14 @@ using System.Data;
 
 namespace WinFormsApp1
 {
-    internal class ReadFromDB
+    class ReadFromDB
     {
         public static bool ReadCurrentUser(string login, string password)
         {
             DB db = new DB();
             bool userIsLoggedInSuccessfully;
-
             DataTable dt = new DataTable();
             MySqlDataAdapter adapter = new MySqlDataAdapter();
-
             MySqlCommand command = new MySqlCommand("SELECT * FROM `users` WHERE `login`=@uL AND `password`=@uP", db.getConnection());
             command.Parameters.Add("@uL", MySqlDbType.VarChar).Value = login;
             command.Parameters.Add("@uP", MySqlDbType.VarChar).Value = password;
@@ -23,28 +21,13 @@ namespace WinFormsApp1
             if (dt.Rows.Count > 0)
             {
                 userIsLoggedInSuccessfully = true;
-
                 var read = command.ExecuteReader();
                 read.Read();
-
-                var withoutTime = read.GetString(6).Split(' ')[0];
-                var day = int.Parse(withoutTime.Split('.')[0]);
-                var month = int.Parse(withoutTime.Split('.')[1]);
-                var year = int.Parse(withoutTime.Split(".")[2]);
-                var date = new DateTime(year, month, day);
-                User.Current._id = int.Parse(read.GetString(0));
-                User.Current._login = read.GetString(1);
-                User.Current._password = read.GetString(2);
-                User.Current._name = read.GetString(3);
-                User.Current._surename = read.GetString(4);
-                User.Current._patronymic = read.GetString(5);
-                User.Current._Date = date;
-                User.Current._status = read.GetString(7);
-                User.Current._email = read.GetString(8);
+                User user = new User(read.GetInt32(0), read.GetString(1),
+                    read.GetString(2), read.GetString(3), read.GetString(4), read.GetString(5), read.GetDateTime(6), read.GetString(7), read.GetString(8));
             }
             else
                 userIsLoggedInSuccessfully = false;
-
             db.closeConnection();
             return userIsLoggedInSuccessfully;
         }
