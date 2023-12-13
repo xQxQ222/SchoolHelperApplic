@@ -10,12 +10,12 @@ namespace WinFormsApp1
             InitializeComponent();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void LoginButton_Click(object sender, EventArgs e)//Метод, берущий значения логина и пароля из существующих полей и с помощью класса DB ищет пользователя в базе данных
         {
             String login = LoginField.Text;
             String password = PasswordField.Text;
 
-            bool userIsLoggedInSuccessfully = ReadFromDB.ReadCurrentUser(login, password); // выглядит нелогично
+            bool userIsLoggedInSuccessfully = ReadFromDB.ReadCurrentUser(login, password); 
 
             if (userIsLoggedInSuccessfully)
             {
@@ -30,24 +30,16 @@ namespace WinFormsApp1
                 MessageBox.Show("Неправильный логин или пароль");
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
 
-        }
-
-        private void button1_Click_1(object sender, EventArgs e)
+        private void BackButton_Click(object sender, EventArgs e)//Метод, который при нажатии на кнопку "Назад" перекидывает пользователя на окно "StartScreen"
         {
             var startScreen = new StartScreen();
             startScreen.Show();
             Close();
         }
 
-        private void pictureBox1_Click(object sender, EventArgs e)
-        {
 
-        }
-
-        private void ShowPassword_CheckedChanged(object sender, EventArgs e)
+        private void ShowPassword_CheckedChanged(object sender, EventArgs e)//Метод, который в зависимости от выбора пользователя показывать или не показывать пароль применяет метод UseSystemPasswordChar к PasswordField
         {
             if (ShowPassword.Checked == true)
                 PasswordField.UseSystemPasswordChar = false;
@@ -55,18 +47,18 @@ namespace WinFormsApp1
                 PasswordField.UseSystemPasswordChar = true;
         }
 
-        private void label8_Click(object sender, EventArgs e)
+        private void EscapeButton_Click(object sender, EventArgs e)//Метод кнопки закрытия приложения
         {
             Application.Exit();
         }
-        Point lastPoint;
+        Point lastPoint;//Переменная, в которой хранится последняя точка расположения окна на экране пользователя
 
-        private void LoginForm_MouseDown(object sender, MouseEventArgs e)
+        private void LoginForm_MouseDown(object sender, MouseEventArgs e)//Метод, срабатывающий после того, как пользователь перестанет удерживать левую кнопку мыши. Изменяет значение переменной lastPoint
         {
             lastPoint = new Point(e.X, e.Y);
         }
 
-        private void LoginForm_MouseMove(object sender, MouseEventArgs e)
+        private void LoginForm_MouseMove(object sender, MouseEventArgs e)//Метод, позволяющий перемещать данное окно "StartScreen" на экране пользователя, путем зажатия левой кнопки мыши
         {
             if (e.Button == MouseButtons.Left)
             {
@@ -75,17 +67,7 @@ namespace WinFormsApp1
             }
         }
 
-        private void LoginForm_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void PasswordField_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void ForgotPassLinkLabel_Click(object sender, LinkLabelLinkClickedEventArgs e)//При нажатии на LinkLabel "Забыли пароль?" перекидывает пользователя на окно ChangePassword
         {
             var form = new ChangePass();
             form.Show();
